@@ -62,6 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
       showEmptyWidget = false;
       showLoadingWidget = true;
     });
+
     final response = await Dio()
         .get('https://retoolapi.dev/cXYQ5x/data?_page=$offset&_limit=$limit');
 

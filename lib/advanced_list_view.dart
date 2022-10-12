@@ -56,7 +56,8 @@ class _AdvancedListViewState<T> extends State<AdvancedListView<T>> {
   bool _handleScrollNotification(final ScrollNotification notification) {
     if (notification is ScrollEndNotification &&
         widget.scrollDirection == Axis.vertical) {
-      if (_scrollController.position.extentAfter == 0) {
+
+      if (notification.metrics.maxScrollExtent == _scrollController.offset) {
         if (widget.hasMoreData) {
           setState(() {
             widget.showLoadingWidget = true;
@@ -75,51 +76,45 @@ class _AdvancedListViewState<T> extends State<AdvancedListView<T>> {
           ? _emptyListWidget()
           : (widget.showLoadingWidget && widget.items.isEmpty)
               ? _listLoading()
-              : Column(
-                  children: [
-                    Expanded(
-                      child: RefreshIndicator(
-                        onRefresh: widget.onRefresh ??
-                            () async => print(' do something async'),
-                        notificationPredicate: (widget.canRefresh &&
-                                widget.scrollDirection == Axis.vertical)
-                            ? (final _) => true
-                            : (final _) => false,
-                        child: NotificationListener<ScrollNotification>(
-                          onNotification: _handleScrollNotification,
-                          child: ListView.builder(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            itemBuilder: (final context, final index) =>
-                                widget.itemBuilder(
-                              context,
-                              index,
-                              widget.items[index],
+              : RefreshIndicator(
+                  onRefresh: widget.onRefresh ??
+                      () async => print(' do something async'),
+                  notificationPredicate: (widget.canRefresh &&
+                          widget.scrollDirection == Axis.vertical)
+                      ? (final _) => true
+                      : (final _) => false,
+                  child: NotificationListener<ScrollNotification>(
+                    onNotification: _handleScrollNotification,
+                    child: ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemBuilder: (final context, final index) {
+                        if (index < widget.items.length) {
+                          return widget.itemBuilder(
+                            context,
+                            index,
+                            widget.items[index],
+                          );
+                        } else {
+                          return Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Center(
+                              child: widget.showLoadingWidget
+                                  ? CircularProgressIndicator(
+                                      color: widget.indicatorColor,
+                                    )
+                                  : const SizedBox.shrink(),
                             ),
-                            key: widget.listKey,
-                            controller: _scrollController,
-                            shrinkWrap: widget.shrinkWrap,
-                            itemCount: widget.items.length,
-                            scrollDirection: widget.scrollDirection,
-                            padding: widget.padding,
-                          ),
-                        ),
-                      ),
+                          );
+                        }
+                      },
+                      key: widget.listKey,
+                      controller: _scrollController,
+                      shrinkWrap: widget.shrinkWrap,
+                      itemCount: widget.items.length + 1,
+                      scrollDirection: widget.scrollDirection,
+                      padding: widget.padding,
                     ),
-                    if (widget.showLoadingWidget && widget.items.isNotEmpty)
-                      Column(
-                        children: [
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          CircularProgressIndicator(
-                            color: widget.indicatorColor,
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                        ],
-                      ),
-                  ],
+                  ),
                 );
 
   Widget _refreshWidget() => Center(

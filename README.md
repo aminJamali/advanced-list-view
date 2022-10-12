@@ -1,5 +1,14 @@
 <!-- 
  FlutterListView with additional features.
+    try again widget
+    ![](https://media.giphy.com/media/nonr3lyQbUB4CsOWsp/giphy.gif)
+    empty widget    
+    ![](https://media.giphy.com/media/P3ucf7uXe2hNonG5NB/giphy.gif)
+    refresh indicator
+    ![](https://media.giphy.com/media/rloEO09h7dtQgieHxX/giphy.gif)
+    load more items loading
+    ![](https://media.giphy.com/media/LMsUaAa0B7pyClcPKF/giphy.gif)
+
 -->
 
 
@@ -103,3 +112,4 @@ Future<void> _onRefresh() async {
 
 ## Additional information
 
+for more info checkout github repository: https://github.com/aminJamali/advanced-list-view.git
