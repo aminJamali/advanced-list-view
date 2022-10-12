@@ -1,6 +1,6 @@
 name: advanced_list_view
-description: A new Flutter package project.
-version: 0.0.1
+description: Flutter listView with additional features.
+version: 0.0.3
 repository: https://github.com/aminJamali/advanced-list-view
 
 environment:
